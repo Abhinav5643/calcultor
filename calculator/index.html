@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minimalist Modern Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <main class="calculator-container">
+    <!-- Header with controls: Theme, Sound, History -->
+    <header class="calc-header">
+      <div class="header-left">
+        <span class="brand-badge">CALC</span>
+      </div>
+      <div class="header-actions">
+        <button id="soundToggle" class="icon-btn" title="Toggle audio feedback" aria-label="Toggle audio feedback">
+          <svg class="sound-on-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+          <svg class="sound-off-icon hidden" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
+
+        <button id="historyToggle" class="icon-btn" title="Toggle history" aria-label="Toggle history">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </button>
+
+        <button id="themeToggle" class="icon-btn" title="Toggle theme" aria-label="Toggle theme">
+          <svg class="sun-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon-icon hidden" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Display Area -->
+    <section class="display-section" id="displayArea" role="region" aria-label="Calculation Display">
+      <div class="previous-expression" id="prevExpression" aria-live="polite"></div>
+      <div class="current-operand-wrapper">
+        <span class="active-operator" id="activeOperator"></span>
+        <div class="current-operand" id="currentOperand" aria-live="assertive">0</div>
+      </div>
+      <div class="copy-toast" id="copyToast">Copied to clipboard!</div>
+    </section>
+
+    <!-- Keypad Grid -->
+    <section class="keypad-grid" role="group" aria-label="Calculator Keypad">
+      <!-- Row 1 -->
+      <button class="key func-key" data-action="clear" data-key="Escape" aria-label="Clear All">
+        <span class="key-label">AC</span>
+      </button>
+      <button class="key func-key" data-action="toggle-sign" aria-label="Toggle Sign">
+        <span class="key-label">±</span>
+      </button>
+      <button class="key func-key" data-action="percent" data-key="%" aria-label="Percent">
+        <span class="key-label">%</span>
+      </button>
+      <button class="key op-key" data-action="operator" data-operator="÷" data-key="/" aria-label="Divide">
+        <span class="key-label">÷</span>
+      </button>
+
+      <!-- Row 2 -->
+      <button class="key num-key" data-action="number" data-value="7" data-key="7">
+        <span class="key-label">7</span>
+      </button>
+      <button class="key num-key" data-action="number" data-value="8" data-key="8">
+        <span class="key-label">8</span>
+      </button>
+      <button class="key num-key" data-action="number" data-value="9" data-key="9">
+        <span class="key-label">9</span>
+      </button>
+      <button class="key op-key" data-action="operator" data-operator="×" data-key="*" aria-label="Multiply">
+        <span class="key-label">×</span>
+      </button>
+
+      <!-- Row 3 -->
+      <button class="key num-key" data-action="number" data-value="4" data-key="4">
+        <span class="key-label">4</span>
+      </button>
+      <button class="key num-key" data-action="number" data-value="5" data-key="5">
+        <span class="key-label">5</span>
+      </button>
+      <button class="key num-key" data-action="number" data-value="6" data-key="6">
+        <span class="key-label">6</span>
+      </button>
+      <button class="key op-key" data-action="operator" data-operator="−" data-key="-" aria-label="Subtract">
+        <span class="key-label">−</span>
+      </button>
+
+      <!-- Row 4 -->
+      <button class="key num-key" data-action="number" data-value="1" data-key="1">
+        <span class="key-label">1</span>
+      </button>
+      <button class="key num-key" data-action="number" data-value="2" data-key="2">
+        <span class="key-label">2</span>
+      </button>
+      <button class="key num-key" data-action="number" data-value="3" data-key="3">
+        <span class="key-label">3</span>
+      </button>
+      <button class="key op-key" data-action="operator" data-operator="+" data-key="+" aria-label="Add">
+        <span class="key-label">+</span>
+      </button>
+
+      <!-- Row 5 -->
+      <button class="key num-key" data-action="backspace" data-key="Backspace" aria-label="Delete">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+          <line x1="18" y1="9" x2="12" y2="15"></line>
+          <line x1="12" y1="9" x2="18" y2="15"></line>
+        </svg>
+      </button>
+      <button class="key num-key" data-action="number" data-value="0" data-key="0">
+        <span class="key-label">0</span>
+      </button>
+      <button class="key num-key" data-action="decimal" data-key=".">
+        <span class="key-label">.</span>
+      </button>
+      <button class="key equals-key" data-action="calculate" data-key="Enter" aria-label="Equals">
+        <span class="key-label">=</span>
+      </button>
+    </section>
+
+    <!-- History Panel Drawer -->
+    <aside class="history-drawer" id="historyDrawer" aria-hidden="true">
+      <div class="drawer-header">
+        <h3>Calculation History</h3>
+        <div class="drawer-actions">
+          <button id="clearHistoryBtn" class="drawer-text-btn">Clear</button>
+          <button id="closeHistoryBtn" class="icon-btn small" aria-label="Close history">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="history-list" id="historyList">
+        <div class="history-empty">No calculations yet</div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="keyboard-tip">
+    <span>Tip: Full keyboard support enabled (0-9, +, -, *, /, Enter, Backspace, Esc)</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
